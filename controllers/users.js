@@ -48,6 +48,17 @@ const createSendToken = catchAsync(async (user, statusCode, res) => {
 	});
 });
 
+const filterObj = (obj, ...allowedFields) => {
+	const newObj = {};
+	Object.keys(obj).forEach((el) => {
+		if (allowedFields.includes(el)) {
+			newObj[el] = obj[el];
+		}
+	});
+
+	return newObj;
+};
+
 const signup = catchAsync(async (req, res, next) => {
 	const user = await User.create({
 		fullName: req.body.fullName,
@@ -79,8 +90,8 @@ const signup = catchAsync(async (req, res, next) => {
 		user.loggedOut = undefined;
 		res.status(200).json({
 			user,
-			message: "Sign up succesful!! Please confirm your email"
-		})
+			message: 'Sign up succesful!! Please confirm your email',
+		});
 	} catch (err) {
 		user.confirmEmailToken = undefined;
 		user.active = true;
@@ -172,8 +183,8 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
 	//3 log user in
 	res.status(200).json({
-		message: "Password succesfully reset!! Proceed to login"
-	})
+		message: 'Password succesfully reset!! Proceed to login',
+	});
 });
 
 const confirmEmail = catchAsync(async (req, res, next) => {
@@ -247,13 +258,60 @@ const logout = catchAsync(async (req, res, next) => {
 	});
 });
 
+const updatePassword = catchAsync(async (req, res, next) => {
+	//1 Get user from collection
+	const user = await User.findOne({ email: req.user.email }).select(
+		'+password'
+	);
+	//2 Check if posted current password is correct
+	if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+		return next(new AppError('Your current password is wrong', 401));
+	}
+	//3 if so, update password
+	user.password = req.body.password;
+	user.passwordConfirm = req.body.passwordConfirm;
+
+	await user.save();
+
+	user.loggedOut = true;
+	await user.save({ validateBeforeSave: false });
+
+	res.status(200).json({
+		status: 'success',
+		message: 'Password changed successfully',
+	});
+});
+
+const updateMe = catchAsync(async (req, res, next) => {
+	//1 create error if user POSTs password data
+	if (req.body.password || req.body.passwordConfirm) {
+		return next(new AppError('This route isnt for updating password', 400));
+	}
+	//2 Filter unwanted fields
+	const filteredBody = filterObj(req.body, 'fullName', 'email');
+
+	//2 Update user data
+	const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+		new: true,
+		runValidators: true,
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			user: updatedUser,
+		},
+	});
+});
 
 module.exports = {
 	signup,
 	login,
 	forgotPassword,
 	resetPassword,
+	updatePassword,
 	confirmEmail,
 	protect,
-	logout
+	logout,
+	updateMe
 };
