@@ -21,8 +21,8 @@ const TaskSchema = new mongoose.Schema({
         required : [true, "must provide deadline date"]
     },
     taskType : {
-        type : String,
-        enum : ["group", "personal"],
+        type: String,
+        enum : ['group', 'personal'],
         required : [true, "must provide task type"]
     },
     groupEmail : [{

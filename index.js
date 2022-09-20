@@ -46,7 +46,7 @@ app.all('*', (req, res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const start = catchAsync(async () => {
 	await connectDB(process.env.MONGO_URI);
 

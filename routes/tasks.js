@@ -12,7 +12,7 @@ const {
 const { protect } = require("../controllers/users")
 
 
-router.route("/").get(protect, getAllTasks).post(protect, createTask)
+router.route("/").get(getAllTasks).post(protect, createTask)
 router.route("/:id").get(protect, getTask).patch(protect, updateTask).delete(protect, deleteTask)
 
 module.exports = router
