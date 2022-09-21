@@ -93,9 +93,7 @@ const signup = catchAsync(async (req, res, next) => {
 			message: 'Sign up succesful!! Please confirm your email',
 		});
 	} catch (err) {
-		user.confirmEmailToken = undefined;
-		user.active = true;
-		await user.save({ validateBeforeSave: false });
+		return next(new AppError('Something went wrong, please try again later', 401));
 	}
 });
 
@@ -241,12 +239,10 @@ const resendEmail = catchAsync(async (req, res, next) => {
 		user.loggedOut = undefined;
 		res.status(200).json({
 			user,
-			message: 'Sign up succesful!! Please confirm your email',
+			message: 'Email sent succesfully',
 		});
 	} catch (err) {
-		user.confirmEmailToken = undefined;
-		user.active = true;
-		await user.save({ validateBeforeSave: false });
+		return next(new AppError('Something went wrong, please try again later', 401));
 	}
 });
 
