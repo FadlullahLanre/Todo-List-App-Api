@@ -8,6 +8,7 @@ const {
 	resetPassword,
 	updatePassword,
 	confirmEmail,
+	resendEmail,
 	protect,
 	logout,
 	updateMe
@@ -17,6 +18,7 @@ const {
 router.route('/login').post(login);
 router.route('/signup').post(signup);
 router.route('/forgotPassword').post(forgotPassword);
+router.route('/resendEmail').post(resendEmail);
 router.route('/updatePassword').post(updatePassword);
 router.route('/updateMe').post(updateMe);
 router.route('/resetPassword/:token').post(resetPassword);
