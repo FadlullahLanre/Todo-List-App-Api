@@ -93,9 +93,7 @@ const signup = catchAsync(async (req, res, next) => {
 			message: 'Sign up succesful!! Please confirm your email',
 		});
 	} catch (err) {
-		user.confirmEmailToken = undefined;
-		user.active = true;
-		await user.save({ validateBeforeSave: false });
+		return next(new AppError('Something went wrong, please try again later', 401));
 	}
 });
 
@@ -196,18 +194,56 @@ const confirmEmail = catchAsync(async (req, res, next) => {
 
 	const user = await User.findOne({
 		confirmEmailToken: hashedToken,
-	});
+	}).select('+active');
 
 	//2 set user as active if user exists
 	if (!user) {
 		return next(new AppError('Token is invalid', 400));
 	}
+	if (user.active) return next(new AppError('This user is already verified, please login', 401));
 
 	user.active = true;
 	user.confirmEmailToken = undefined;
 
 	await user.save({ validateBeforeSave: false });
 	createSendToken(user, 200, res);
+});
+
+const resendEmail = catchAsync(async (req, res, next) => {
+	//1 Get user based on email
+	const user = await User.findOne({ email: req.body.email }).select('+active');
+
+	if (!user) return next(new AppError('User does not exist, please sign up', 401));
+	if (user.active) return next(new AppError('This user is already verified, please login', 401));
+
+	//2 Generate the random email token
+	const confirmToken = user.createEmailConfirmToken();
+	await user.save({ validateBeforeSave: false });
+
+	//3 send to user mail
+	const confirmURL = `${req.protocol}://${req.get(
+		'host'
+	)}/api/v1/users/confirmEmail/${confirmToken}`;
+
+	const message = `Confirm email address using this <a href=${confirmURL}>Link</a>.`;
+
+	try {
+		await sendEmail({
+			email: user.email,
+			subject: 'Confirm Email Address',
+			message,
+		});
+		user.password = undefined;
+		user.active = undefined;
+		user.confirmEmailToken = undefined;
+		user.loggedOut = undefined;
+		res.status(200).json({
+			user,
+			message: 'Email sent succesfully',
+		});
+	} catch (err) {
+		return next(new AppError('Something went wrong, please try again later', 401));
+	}
 });
 
 const protect = catchAsync(async (req, res, next) => {
@@ -311,6 +347,7 @@ module.exports = {
 	resetPassword,
 	updatePassword,
 	confirmEmail,
+	resendEmail,
 	protect,
 	logout,
 	updateMe
