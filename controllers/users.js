@@ -138,7 +138,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 	try {
 		await sendEmail({
 			email: user.email,
-			subject: 'Your password reset token(valid for 10mins)',
+			subject: 'Your password reset token(the link is valid for 10mins)',
 			message,
 		});
 
@@ -172,7 +172,6 @@ const resetPassword = catchAsync(async (req, res, next) => {
 		return next(new AppError('Token is invalid or has expired', 400));
 	}
 	user.password = req.body.password;
-	user.passwordConfirm = req.body.passwordConfirm;
 	user.passwordResetToken = undefined;
 	user.passwordResetExpires = undefined;
 
