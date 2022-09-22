@@ -61,11 +61,10 @@ const filterObj = (obj, ...allowedFields) => {
 
 const signup = catchAsync(async (req, res, next) => {
 	const user = await User.create({
-		fullName: req.body.fullName,
+		userName: req.body.userName,
 		email: req.body.email,
 		password: req.body.password,
-		passwordConfirm: req.body.passwordConfirm,
-		role: req.body.role,
+		
 	});
 
 	const confirmToken = user.createEmailConfirmToken();
