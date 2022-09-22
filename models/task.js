@@ -20,14 +20,16 @@ const TaskSchema = new mongoose.Schema({
         type: Date,
         required : [true, "must provide deadline date"]
     },
-    taskType : {
+    category : {
         type: String,
-        enum : ['group', 'personal'],
-        required : [true, "must provide task type"]
+        enum : ['work', 'personal', 'school', 'home'],
+        required : [true, "must provide category"]
     },
-    groupEmail : [{
-        type: String
-    }]
+    taskStatus : {
+        type: String,
+        enum : ['inProgress', 'completed'],
+        default : "inProgress"
+    }
 },
     { timestamps: true },
 
