@@ -4,6 +4,12 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
+	userName : {
+		type: String,
+		unique : true,
+		trim : true,
+		required : [true, 'Must provide username']
+	},
 	email: {
 		type: String,
 		unique: true,
@@ -17,16 +23,6 @@ const userSchema = new mongoose.Schema({
 		required: [true, 'Please enter password'],
 		minLength: 8,
 		select: false,
-	},
-	passwordConfirm: {
-		type: String,
-		required: [true, 'Please confirm password'],
-		validate: {
-			validator: function (el) {
-				return el === this.password;
-			},
-			message: 'Passwords mismatch',
-		},
 	},
 	passwordResetToken: String,
 	passwordResetExpires: Date,
