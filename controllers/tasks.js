@@ -5,11 +5,11 @@ const User = require('../models/users');
 const AppError = require('../utils/appError');
 
 const getAllTasks =  catchAsync ( async (req, res, next) => {
-    const tasks = await Task.find({createdBy:req.user.id, category: req.body.category})
+    const tasks = await Task.find({createdBy:req.user.id})
     if(!tasks){
         return next(new AppError("You have no pending tasks", 404))
     }
-    res.status(200).json({tasks})
+    res.status(200).json(tasks)
 })
 
 const createTask =  catchAsync( async (req, res) => {
@@ -20,14 +20,12 @@ const createTask =  catchAsync( async (req, res) => {
 })
 
 const getTask = catchAsync( async (req, res, next) => {
-    //const singleTask = await Task.findOne({_id : req.params.id, createdBy: req.user.id})
-    const workTaskCategory = await Task.findOne({category : req.params.category, createdBy: req.user.id})
+    const singleTask = await Task.findOne({_id : req.params.id, createdBy: req.user.id})
 
-
-    if(!workTaskCategory){
+    if(!singleTask){
         return next(new AppError(`no task with id : ${req.params.id}`, 400))
     }
-    res.status(200).json({workTaskCategory})
+    res.status(200).json({singleTask})
 })
 
 const updateTask =  catchAsync( async (req, res, next) => {
