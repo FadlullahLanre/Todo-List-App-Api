@@ -38,6 +38,10 @@ app.use(xss());
 
 app.use('/api/v1/tasks', taskRoute);
 app.use('/api/v1/users', userRoute);
+app.get('/', function (req, res) {
+	res.send('Welcome to the Todo Application!')
+  
+  });
 
 app.all('*', (req, res, next) => {
 	//   const err = new Error(`Can't find ${req.originalUrl} on this server`)
