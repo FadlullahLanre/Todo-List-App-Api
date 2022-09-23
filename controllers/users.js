@@ -138,7 +138,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 	try {
 		await sendEmail({
 			email: user.email,
-			subject: 'Your password reset token(the link is valid for 10mins)',
+			subject: 'Your password reset token(this link is valid for 10mins )',
 			message,
 		});
 
@@ -172,6 +172,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
 		return next(new AppError('Token is invalid or has expired', 400));
 	}
 	user.password = req.body.password;
+	user.passwordConfirm = req.body.passwordConfirm;
 	user.passwordResetToken = undefined;
 	user.passwordResetExpires = undefined;
 
@@ -303,7 +304,7 @@ const updatePassword = catchAsync(async (req, res, next) => {
 	}
 	//3 if so, update password
 	user.password = req.body.password;
-	user.passwordConfirm = req.body.passwordConfirm;
+	//user.passwordConfirm = req.body.passwordConfirm;
 
 	await user.save();
 
@@ -322,7 +323,7 @@ const updateMe = catchAsync(async (req, res, next) => {
 		return next(new AppError('This route isnt for updating password', 400));
 	}
 	//2 Filter unwanted fields
-	const filteredBody = filterObj(req.body, 'fullName', 'email');
+	const filteredBody = filterObj(req.body, 'userName', 'email');
 
 	//2 Update user data
 	const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {

@@ -39,7 +39,7 @@ app.use(xss());
 app.use('/api/v1/tasks', taskRoute);
 app.use('/api/v1/users', userRoute);
 app.get('/', function (req, res) {
-	res.send('Welcome to the Todo Application!')
+	res.send({ message : 'Welcome to the Todo Application!, to access any endpoint, use api/v1 after the URL, then /endpoint'});
   
   });
 
