@@ -1,10 +1,13 @@
 # TodoList-Application-Api
 This is a **Side Hustle Bootcamp** Group Task for the backend track (NodeJs).
 
- A CRUD Todo app api with authorization, authentication and validation, and also sends email to users after creating an account.
+ A CRUD Task manager app api with authorization, authentication and validation, and also sends email to users after creating an account.
  
 #Link to postman documentation: 
-https://documenter.getpostman.com/view/20417456/2s7YfHhcGe
+https://documenter.getpostman.com/view/16044663/2s7ZLhpraY#25094c23-ce26-4dbd-81d8-9a8e64c32ec7
+
+#Link to Api
+https://todo-app-bc.herokuapp.com/
 
 ### How to run
 - Clone the repo and open the folder using vscode or any other ide of choice
@@ -26,6 +29,8 @@ The following endpoints are available on this server:
 - `/api/v1/users/logout`: logs out a user(protected route).
 - `/api/v1/users/forgotPassword`: to get reset password url.
 - `/api/v1/users/resetPassword/:token`: to reset password.
+- `/api/v1/users/updateMe` : to update a user profile.
+- `/api/v1/users/updatePassword` : to change a user's password
 - `/api/v1/users/confirmEmail/:token`: to confirm email after signup.
 - `/api/v1/tasks/`: to get all tasks or create a new task
 - `/api/v1/tasks/:id`: to get a single task, delete a single task or update a single task
