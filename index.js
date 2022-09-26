@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -13,8 +14,11 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./utils/globalErrors');
 const catchAsync = require('./utils/catchAsync');
 
-const app = express();
 
+const app = express();
+app.use(cors({
+    origin: '*'
+}));
 // for parsing application/json
 app.use(express.json());
 
