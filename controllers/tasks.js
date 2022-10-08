@@ -12,6 +12,14 @@ const getAllTasks =  catchAsync ( async (req, res, next) => {
     res.status(200).json(tasks)
 })
 
+const getByCategory =  catchAsync ( async (req, res, next) => {
+    const tasks = await Task.findOne({createdBy:req.user.id, category: req.params.category})
+    if(!tasks){
+        return next(new AppError(`No task by category: ${req.params.category}`, 404))
+    }
+    res.status(200).json(tasks)
+})
+
 const createTask =  catchAsync( async (req, res) => {
     req.body.createdBy = req.user.id
     const task = await Task.create(req.body)
@@ -54,5 +62,6 @@ module.exports = {
     createTask,
     getTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    getByCategory
 }

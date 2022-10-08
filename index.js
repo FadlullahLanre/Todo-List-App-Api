@@ -14,8 +14,8 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./utils/globalErrors');
 const catchAsync = require('./utils/catchAsync');
 
-
 const app = express();
+// any origin can access the resource
 app.use(cors({
     origin: '*'
 }));
