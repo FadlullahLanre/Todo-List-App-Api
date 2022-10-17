@@ -3,10 +3,10 @@ This is a **Side Hustle Bootcamp** Group Task for the backend track (NodeJs).
 
  A CRUD Task manager app api with authorization, authentication and validation, and also sends email to users after creating an account.
  
-#Link to postman documentation: 
+### Postman documentation: 
 https://documenter.getpostman.com/view/16044663/2s7ZLhpraY#25094c23-ce26-4dbd-81d8-9a8e64c32ec7
 
-#Link to Api
+### Api
 https://todo-app-bc.herokuapp.com/
 
 ### How to run
